@@ -1,0 +1,31 @@
+﻿
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+    environment: 
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Rania@123456"
+    ports:
+        - "1433:1433"
+
+    volumes: 
+      - mssql-data:/var/opt/mssql
+
+  api:
+    build: .
+
+    environment:
+      ConnectionStrings__cs:
+          "Server=db;Database=Labs_WebApiApp;User Id=sa;Password=Rania@123456;Encrypt=False;TrustServerCertificate=True"
+      ASPNETCORE_URLS: "http://+:8080"
+
+    ports:
+        - "8080:8080"
+
+    depends_on:
+        - db
+
+volumes:
+  mssql-data:
+      
